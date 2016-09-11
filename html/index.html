@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>React Tutorial</title>
+    <script src="https://unpkg.com/react@15.3.1/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.1/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
+</head>
+
+<body>
+  <h1>repeating component with properties</h1>
+    <div id="content"></div>
+    <hr/>
+    <h1>State</h1>
+    <div id="state"></div>
+    <hr/>
+    <h1>Event handling and children property</h1>
+    <div id="comment"></div>
+
+
+
+
+    <script type="text/babel">
+
+    var Movie = React.createClass({
+      render: function() {
+        return (<div>
+            <h3>{this.props.title}</h3>
+            <h4>{this.props.genre}</h4>
+           </div>);
+      }
+    });
+
+    var Comment = React.createClass({
+
+        getInitialState: function(){
+          return {editMode:false}
+        },
+        edit: function(){
+          this.setState({editMode: true})
+        },
+        save: function(){
+          var newValue = this.refs.textareaValue.value;
+          this.setState({editMode: false})
+
+        },
+        remove: function(){
+          alert("remove called");
+        },
+        renderForm: function(){
+            return (<div>
+              <textarea ref="textareaValue" value={this.props.children}></textarea><br/>
+              <button onClick={this.save}>Save</button>&nbsp;
+              </div>);
+        },
+        renderNormal: function(){
+            return (<div>
+              <div>{this.props.children}</div>
+              <button onClick={this.edit}>Edit</button>&nbsp;
+            </div>);
+        },
+        render: function(){
+          if(this.state.editMode)
+          {
+            return this.renderForm();
+          }
+          else {
+            return this.renderNormal();
+          }
+        }
+    });
+
+    ReactDOM.render(
+      <div>
+      <Movie title="Tangled" genre="animated"/>
+      <Movie title="A moment to remember" genre="romance"/>
+      <Movie title="Avengers" genre="action"/>
+      </div>,
+      document.getElementById('content')
+    );
+
+   ReactDOM.render(
+     <div>
+     <Comment>comment 1</Comment>
+     <Comment>comment 2</Comment>
+    <Comment>comment 3</Comment>
+     </div>
+     , document.getElementById('comment')
+   );
+
+
+  var Statecomp = React.createClass({
+
+     getInitialState: function(){
+       return {checked:false}
+     },
+     handleChecked: function(){
+       this.setState({checked: !this.state.checked})
+
+     },
+     render: function(){
+       var msg;
+       if(this.state.checked)
+       {
+         msg = "checked"
+       }
+       else {
+         msg = "unchecked"
+       }
+
+       return (<div>
+          <input type="checkbox" onChange={this.handleChecked}/>
+          <p>Checkbox is {msg}</p>
+         </div>);
+     }
+  });
+
+  ReactDOM.render(<Statecomp />,document.getElementById('state'))
+
+    </script>
+</body>
+
+</html>
